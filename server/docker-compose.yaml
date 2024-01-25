@@ -1,0 +1,16 @@
+version: "3"
+
+services:
+  mysql:
+    image: mysql
+    container_name: mysql-currency
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: currency
+      MYSQL_USER: user
+      MYSQL_PASSWORD: user
+    volumes:
+      - ./mysql:/docker-entrypoint-initdb.d
+    ports:
+      - 3306:3306
