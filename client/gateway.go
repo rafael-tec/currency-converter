@@ -37,15 +37,15 @@ func (g currencyGateway) FetchCurrencyQuote(fromCurrency string, toCurrency stri
 		return CurrencyConversion{}, fmt.Errorf("fetch currency conversion failed: %w", err)
 	}
 
-	if res.StatusCode != 200 {
-		return CurrencyConversion{}, fmt.Errorf("api returned status error code: %d", res.StatusCode)
-	}
-
 	defer res.Body.Close()
 
 	resBody, err := io.ReadAll(res.Body)
 	if err != nil {
 		return CurrencyConversion{}, fmt.Errorf("read response body failed: %w", err)
+	}
+
+	if res.StatusCode != 200 {
+		return CurrencyConversion{}, fmt.Errorf("status code: %d message: %s", res.StatusCode, resBody)
 	}
 
 	var conversion CurrencyConversion
