@@ -11,7 +11,12 @@ Serão dois sistemas:
 
 ## Como executar a aplicação
 
-- Execute o comando docker-compose up para subir o container mysql e aplicação.
-- Execute o comando go run . dentro do diretório server.
-- Execute o comando go run . dentro do diretório client.
+- Execute o comando docker-compose up para subir o container mysql e aplicação
+- Execute o comando go run . dentro do diretório server
+- Execute o comando go run . dentro do diretório client
 - Faça uma requisição GET para o endpoint localhost:8081/client/quote
+
+## Erros
+
+- 400 Bad Request
+    - Server retorna status code 400 quando API externa excede o timeout de 200 milissegundo
