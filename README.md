@@ -17,6 +17,5 @@ Serão dois sistemas:
 - Faça uma requisição GET para o endpoint localhost:8081/client/quote
 
 ## Erros
-
 - 400 Bad Request
     - Server retorna status code 400 quando API externa excede o timeout de 200 milissegundo
