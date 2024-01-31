@@ -26,7 +26,7 @@ func NewCurrencyGateway() CurrencyGateway {
 }
 
 func (g economiaGateway) FetchCurrencyConversion(fromCurrency string, toCurrency string) (CurrencyConversion, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), time.Millisecond*200)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*6)
 	defer cancel()
 
 	url := "https://economia.awesomeapi.com.br/json/last/USD-BRL"

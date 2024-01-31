@@ -4,6 +4,8 @@ import (
 	"context"
 	"database/sql"
 	"time"
+
+	_ "github.com/go-sql-driver/mysql"
 )
 
 type CurrencyRepository interface {
@@ -13,11 +15,49 @@ type CurrencyRepository interface {
 type currencyRepository struct{}
 
 func NewCurrencyRepository() CurrencyRepository {
+	db, err := sql.Open("sqlite3", ":memory")
+	if err != nil {
+		panic(err)
+	}
+
+	defer db.Close()
+
+	sts := `
+		DROP TABLE IF EXISTS currency_conversions;
+	
+		CREATE TABLE currency_conversions(
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			bid DECIMAL(10,2) NOT NULL,
+			quote_time VARCHAR(30) NOT NULL
+		);
+
+		INSERT INTO currency_conversions(
+			bid,
+			quote_time
+		) VALUES(
+			7.77,
+			"2024-01-30 22:22:22"
+		);
+
+		INSERT INTO currency_conversions(
+			bid,
+			quote_time
+		) VALUES(
+			3.33,
+			"2024-01-29 21:10:03"
+		);
+	`
+	_, err = db.Exec(sts)
+
+	if err != nil {
+		ErrorLogger.Fatal(err)
+	}
+
 	return currencyRepository{}
 }
 
 func (r currencyRepository) Save(bid string, quoteTime time.Time) error {
-	db, err := sql.Open("mysql", "root:root@tcp(localhost:3306)/currency")
+	db, err := sql.Open("sqlite3", ":memory")
 	if err != nil {
 		return err
 	}
@@ -34,7 +74,9 @@ func (r currencyRepository) Save(bid string, quoteTime time.Time) error {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Millisecond*10)
 	defer cancel()
 
-	_, err = stmt.ExecContext(ctx, bid, quoteTime)
+	dateTime := quoteTime.Format(time.DateTime)
+
+	_, err = stmt.ExecContext(ctx, bid, dateTime)
 	if err != nil {
 		return err
 	}
